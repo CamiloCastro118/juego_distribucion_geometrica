@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>Juego : Moneda</title>
+
+<!-- CSS -->
+<style>
+  :root {
+    --azul: #007bff;
+    --azul-oscuro: #0056b3;
+    --blanco: #ffffff;
+    --gris-claro: #f0f0f0;
+    --sombra: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(180deg, #42abe3 0%, #e8f7ff 45%, #42abe3 100%);
+    font-family: "Inter", "Poppins", sans-serif;
+    color: #0b2135;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  header {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 5px;
+  }
+
+  header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  .card {
+    background: var(--blanco);
+    color: #222;
+    border-radius: 14px;
+    padding: 28px 30px;
+    margin-top: 28px;
+    width: 92%;
+    max-width: 680px;
+    box-shadow: 0 8px 30px rgba(11,33,53,0.12);
+    text-align: center;
+    border: 1px solid rgba(11,33,53,0.04);
+  }
+
+  #moneda {
+    font-size: 6em;
+    margin: 20px;
+    transition: transform 0.6s ease;
+  }
+
+  button {
+    background-color: var(--azul);
+    border: none;
+    color: var(--blanco);
+    padding: 12px 22px;
+    margin-top: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(0,123,255,0.14);
+    transition: background-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+  }
+
+  button:hover {
+    background-color: var(--azul-oscuro);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0,123,255,0.18);
+  }
+
+  /* Boton especifico para ir al juego del dado */
+  #btnIrDado {
+    background-color: var(--azul-oscuro);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    box-shadow: 0 6px 18px rgba(0,83,179,0.12);
+  }
+
+  #btnIrDado:hover {
+    background-color: #003f8a; /* un tono mas oscuro para hover */
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0,63,138,0.16);
+  }
+
+  #resultado {
+    margin-top: 20px;
+    font-size: 1.2em;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(11,33,53,0.06);
+  }
+
+  th, td {
+    padding: 12px;
+    text-align: center;
+  }
+
+  th {
+    background-color: var(--azul);
+    color: var(--blanco);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-size: 0.95rem;
+  }
+
+  tr:nth-child(even) {
+    background-color: var(--gris-claro);
+  }
+
+  tr:nth-child(odd) {
+    background-color: #e6f2ff;
+  }
+
+  footer {
+    margin-top: 34px;
+    padding: 18px 10px;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    color: rgba(11,33,53,0.6);
+  }
+
+  footer a {
+    color: var(--blanco);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* Focus visible para accesibilidad */
+  button:focus, #btnIrDado:focus {
+    outline: 3px solid rgba(0,123,255,0.18);
+    outline-offset: 3px;
+  }
+
+  /* Ajuste de iconos dentro de botones */
+  #btnIrDado svg { width: 20px; height: 20px; }
+  /* Boton para abrir la simulacion (indexxx) */
+  #btnIrSimulacion {
+    background-color: var(--azul-oscuro);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    box-shadow: 0 6px 18px rgba(0,83,179,0.12);
+  }
+  #btnIrSimulacion svg { width: 20px; height: 20px; }
+
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 1.6rem;
+    }
+    .card {
+      padding: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎯 Juego - El Primer Exito Lanzamiento de 1 Moneda</h1>
+  <p>Demostracion interactiva de la <strong>Distribucion Geometrica</strong></p>
+   <p>Simula lanzamientos de una moneda hasta obtener  <strong>Cara</strong>. (p = 1/2)</p>
+</header>
+
+<div class="card">
+  <div id="moneda">🪙</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button id="btnLanzar">Lanzar moneda</button>
+    </div>
+
+  <div id="resultado"></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Intento</th>
+        <th>Resultado</th>
+  <th>Probabilidad teorica P(X=k)</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-body"></tbody>
+  </table>
+</div>
+
+<footer>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button id="btnIrDado" title="Ir al juego del dado" aria-label="Ir al juego del dado">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#fff;">
+          <rect x="3" y="3" width="18" height="18" rx="3" fill="currentColor" />
+          <circle cx="8" cy="8" r="1.3" fill="#fff" />
+          <circle cx="16" cy="8" r="1.3" fill="#fff" />
+          <circle cx="8" cy="16" r="1.3" fill="#fff" />
+          <circle cx="16" cy="16" r="1.3" fill="#fff" />
+        </svg>
+        Ir al juego del dado
+      </button>
+      <button id="btnIrSimulacion" title="Abrir simulacion" aria-label="Abrir simulacion" style="margin-left:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#fff;">
+          <path d="M3 12l18-12v24L3 12z" fill="currentColor"/>
+        </svg>
+        Simulacion
+      </button>
+    </div>
+    <div>Creado por <a href="https://github.com/CamiloCastro118" target="_blank">Camilo Castro</a> — © 2025</div>
+  </div>
+</footer>
+
+<!-- SCRIPT JS  -->
+<script>
+  /*
+    Logica del juego de la moneda:
+    - Modelo: variable geometrica que cuenta ensayos hasta el primer exito (cara).
+    - p es la probabilidad de exito por ensayo (cara). En este ejemplo p = 0.5.
+    - Cada vez que el usuario pulsa el boton se genera un valor aleatorio uniformemente en [0,1).
+      Si random < p entonces se considera 'cara' (exito), en otro caso 'sello' (fallo).
+    - Se registra el numero de intento k y se calcula la probabilidad teorica de que
+      el primer exito ocurra justo en k usando: P(X=k) = (1 - p)^(k - 1) * p.
+    - El codigo actualiza la interfaz: anima la moneda, agrega una fila en la tabla,
+      muestra el resultado y cambia el texto del boton para reiniciar cuando hay exito.
+  */
+
+  // variables de estado
+  let intento = 0;            // contador de intentos (k)
+  let encontrado = false;     // bandera que indica si ya hubo exito
+
+  // parametros y referencias DOM
+  const p = 0.5; // probabilidad de exito cara
+  const moneda = document.getElementById("moneda");
+  const resultado = document.getElementById("resultado");
+  const tablaBody = document.getElementById("tabla-body");
+  const boton = document.getElementById("btnLanzar");
+  const btnIrDado = document.getElementById("btnIrDado");
+
+  // manejador del boton que realiza un intento
+  boton.addEventListener("click", () => {
+    // si ya se encontro el exito, reiniciar para nueva simulacion
+    if (encontrado) {
+      reiniciarJuego();
+      return;
+    }
+
+    // incrementar intento y animar la moneda
+    intento++;
+    moneda.style.transform = "rotateY(360deg)";
+
+    // esperar la animacion antes de mostrar el resultado
+    setTimeout(() => {
+      // generar numero aleatorio y determinar exito/fallo
+      const esCara = Math.random() < p; // true si sale cara (prob p)
+      moneda.textContent = esCara ? "🙂" : "🙃";
+
+      // texto para la fila de la tabla
+      const resultadoTexto = esCara ? "Cara ✅ (Exito)" : "Sello ❌ (Fallo)";
+
+      // probabilidad teorica P(X=k) calculada con la formula de la geometrica
+      const probTeorica = ((1 - p) ** (intento - 1) * p).toFixed(4);
+
+      // agregar fila a la tabla con intento, resultado y probabilidad teorica
+      tablaBody.innerHTML += `
+        <tr>
+          <td>${intento}</td>
+          <td>${resultadoTexto}</td>
+          <td>${probTeorica}</td>
+        </tr>
+      `;
+
+      // si es exito, mostrar mensaje final y preparar boton para reiniciar
+      if (esCara) {
+        resultado.innerHTML = `
+          <strong>!Exito!</strong> Obtuviste cara en el intento <strong>${intento}</strong>.<br>
+          P(X=${intento}) = ${probTeorica}
+        `;
+        encontrado = true;
+        boton.textContent = "🔁 Jugar de nuevo";
+      } else {
+        // si no, mostrar mensaje de estado y permitir otro intento
+        resultado.textContent = `Intento ${intento}: todavia no salio cara...`;
+      }
+    }, 400);
+  });
+
+  // funcion para reiniciar el estado del juego
+  function reiniciarJuego() {
+    intento = 0;
+    encontrado = false;
+    tablaBody.innerHTML = "";     // limpiar tabla
+    resultado.textContent = "";  // limpiar texto
+    boton.textContent = "Lanzar moneda"; // restaurar texto del boton
+    moneda.textContent = "🪙";     // restaurar icono
+  }
+
+  // navegacion: ir al juego del dado
+  btnIrDado.addEventListener("click", () => {
+    // abrir la pagina indexx.html en la misma pestaña
+    window.location.href = "indexx.html";
+  });
+
+  // navegación: abrir la simulacion (indexxx.html) desde este archivo
+  const btnIrSimulacion = document.getElementById("btnIrSimulacion");
+  if (btnIrSimulacion) {
+    btnIrSimulacion.addEventListener("click", () => {
+      window.location.href = "indexxx.html";
+    });
+  }
+</script>
+
+</body>
+</html>

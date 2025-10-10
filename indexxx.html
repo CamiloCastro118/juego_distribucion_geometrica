@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulacion de Conexion</title>
+  <style>
+    /* Shared theme variables */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    :root {
+      --azul: #007bff;
+      --azul-oscuro: #004b99; /* unificar tono azul oscuro con otros archivos */
+      --blanco: #ffffff;
+      --gris-claro: #f0f0f0;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+       background: linear-gradient(180deg, #42abe3 0%, #e8f7ff 45%, #42abe3 100%);
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: var(--azul-oscuro);
+    }
+
+    .card {
+      background: var(--blanco);
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(11,33,53,0.08);
+      width: 92%;
+      max-width: 680px;
+      margin: 0 auto;
+      color: #222;
+    }
+
+    input[type="number"] {
+      width: 100px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(11,33,53,0.06);
+      text-align: center;
+    }
+
+    button {
+      background-color: var(--azul);
+      border: none;
+      padding: 10px 20px;
+      margin-top: 15px;
+      border-radius: 10px;
+      color: var(--blanco);
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(4, 87, 177, 0.12);
+      transition: 0.18s;
+    }
+
+    button:hover {
+      background-color: var(--azul-oscuro);
+      transform: translateY(-2px);
+    }
+
+    .log {
+      text-align: left;
+      background: rgba(11,33,53,0.04);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      max-height: 250px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+    }
+
+    .success { color: #27682a; }
+    .fail { color: #c62828; }
+
+    .prob { margin-top: 10px; font-weight: 700; }
+    /* Icon and focus styles */
+    #btnSimular svg { width: 20px; height: 20px; }
+    button:focus, #btnSimular:focus { outline: 3px solid rgba(0,123,255,0.18); outline-offset: 3px; }
+    /* estilos para botones del footer (consistentes con los otros archivos) */
+    #btnRegresar {
+      background-color: var(--azul-oscuro);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      box-shadow: 0 6px 18px rgba(0,83,179,0.12);
+    }
+    #btnRegresar:hover {
+      background-color: #003f8a; /* tono hover consistente */
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,63,138,0.16);
+    }
+    #btnRegresar svg { width: 20px; height: 20px; }
+
+    #btnIrDado {
+      background-color: var(--azul-oscuro);
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 6px 18px rgba(0,83,179,0.12);
+      margin-left: 8px;
+    }
+    #btnIrDado svg { width: 18px; height: 18px; }
+    #btnIrDado:hover {
+      background-color: #003f8a;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,63,138,0.16);
+    }
+    /* foco accesible para botones del footer */
+    #btnRegresar:focus, #btnIrDado:focus { outline: 3px solid rgba(0,123,255,0.18); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+
+  <h1>🔁 Reintentos hasta la primera conexion exitosa</h1>
+  <div class="card">
+  <p>Introduce la probabilidad de exito en cada intento (entre 0 y 1):</p>
+    <input type="number" id="probabilidad" step="0.01" value="0.0" min="0.01" max="1">
+    <br>
+  <button onclick="simularConexion()" id="btnSimular" title="Simular conexion" aria-label="Simular conexion">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#fff;">
+      <path d="M3 12l18-12v24L3 12z" fill="currentColor"/>
+    </svg>
+    Simular conexion
+  </button>
+
+    <div class="log" id="log"></div>
+
+    <div class="prob" id="resultado"></div>
+  </div>
+
+  <script>
+    /*
+      Funcion principal: simularConexion
+      - Lee el valor de probabilidad 'p' desde el input con id "probabilidad".
+      - Valida que p sea un numero valido en (0, 1].
+      - Simula intentos independientes repetidos hasta obtener el primer exito.
+      - En cada intento genera un numero aleatorio entre 0 y 1: si random <= p entonces es exito.
+      - Anota en el log cada intento indicando exito o fallo y el valor aleatorio usado.
+      - Calcula la probabilidad teorica de que el primer exito ocurra justo en el intento k:
+          P(X = k) = (1 - p)^(k - 1) * p
+      - Muestra en pantalla la probabilidad teorica en porcentaje y la formula usada.
+
+      Comentarios de diseno y calculo 
+      - El modelo es una variable aleatoria geometrica que cuenta el numero de ensayos
+        hasta el primer exito, con ensayos independientes y probabilidad de exito p.
+      - La probabilidad teorica P(X=k) se obtiene multiplicando las (k-1) fallas
+        consecutivas (probabilidad 1-p cada una) por el exito en el k-esimo intento (p).
+      - En la simulacion se repite el proceso hasta que ocurra el exito y se registra k.
+    */
+    function simularConexion() {
+      // obtener p desde el input y referencias a los elementos DOM donde se mostrara info
+      const p = parseFloat(document.getElementById("probabilidad").value);
+      const logDiv = document.getElementById("log");
+      const resultadoDiv = document.getElementById("resultado");
+
+      // limpiar contenido previo
+      logDiv.innerHTML = "";
+      resultadoDiv.innerHTML = "";
+
+      // validar entrada: p debe ser un numero mayor que 0 y menor o igual a 1
+      if (isNaN(p) || p <= 0 || p > 1) {
+        // mensaje simple al usuario si la entrada no es valida
+        alert("⚠️ Ingresa un valor de probabilidad valido (entre 0 y 1).");
+        return;
+      }
+
+      // contador de intentos y bandera de exito
+      let intento = 0;
+      let exito = false;
+
+      // bucle: repetir hasta encontrar el primer exito
+      while (!exito) {
+        intento++; // incrementa el numero de intento (k)
+
+        // generar un valor aleatorio uniforme en [0,1)
+        // si el valor es menor o igual a p, consideramos que hubo exito en ese intento
+        const random = Math.random();
+
+        if (random <= p) {
+          // exito: marcar bandera y anadir linea de exito al log con el valor aleatorio
+          exito = true;
+          logDiv.innerHTML += `<p class="success">✅ Exito en el intento ${intento} (valor aleatorio: ${random.toFixed(3)})</p>`;
+        } else {
+          // fallo: anadir linea de fallo al log
+          logDiv.innerHTML += `<p class="fail">❌ Fallo en el intento ${intento} (valor aleatorio: ${random.toFixed(3)})</p>`;
+        }
+      }
+
+      // calculo teorico: probabilidad de que el primer exito ocurra exactamente en k = intento
+      // formula: P(X=k) = (1 - p)^(k - 1) * p
+      const probTeorica = Math.pow(1 - p, intento - 1) * p;
+
+      // mostrar resultado: convertir a porcentaje con dos decimales y mostrar la formula
+      resultadoDiv.innerHTML = `
+        📊 <strong>Probabilidad teorica</strong> de lograrlo justo en el intento ${intento}: 
+        ${(probTeorica * 100).toFixed(2)}%<br>
+        🧮 Formula: P(X=${intento}) = (1 - ${p})<sup>${intento - 1}</sup> × ${p}
+      `;
+    }
+  </script>
+  <footer>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:18px;">
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button id="btnRegresar" title="Regresar" aria-label="Regresar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#fff;">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/>
+          </svg>
+          Regresar
+        </button>
+        <button id="btnIrDado" title="Ir al juego del dado" aria-label="Ir al juego del dado">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#fff;">
+            <rect x="3" y="3" width="18" height="18" rx="3" fill="currentColor" />
+            <circle cx="8" cy="8" r="1.3" fill="#fff" />
+            <circle cx="16" cy="8" r="1.3" fill="#fff" />
+            <circle cx="8" cy="16" r="1.3" fill="#fff" />
+            <circle cx="16" cy="16" r="1.3" fill="#fff" />
+          </svg>
+          Ir al juego del dado
+        </button>
+      </div>
+      <div>Creado por <a href="https://github.com/CamiloCastro118" target="_blank">Camilo Castro</a> — © 2025</div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT para los botones del footer -->
+  <script>
+    // boton regresar: usa history.back si hay historial, sino abre index.html
+    const btnRegresar = document.getElementById('btnRegresar');
+    if (btnRegresar) {
+      btnRegresar.addEventListener('click', () => {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          window.location.href = 'index.html';
+        }
+      });
+    }
+
+    // boton para ir al juego del dado (indexx.html)
+    const btnIrDado = document.getElementById('btnIrDado');
+    if (btnIrDado) {
+      btnIrDado.addEventListener('click', () => {
+        window.location.href = 'indexx.html';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Juego : Dado</title>
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<!--  CSS -->
+<style>
+  :root {
+    --azul: #007bff;
+    --azul-oscuro: #004b99;
+    --blanco: #ffffff;
+    --gris: #f8f9fa;
+    --sombra: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(180deg, #42abe3 0%, #e8f7ff 45%, #42abe3 100%);
+    font-family: "Inter", "Poppins", sans-serif;
+    color: #0b2135;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  header {
+    margin-top: 30px;
+  }
+
+  h1 {
+    font-size: 2.3rem;
+    margin-bottom: 5px;
+  }
+
+  p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  .card {
+    background: var(--blanco);
+    color: #222;
+    border-radius: 14px;
+    padding: 28px 30px;
+    margin: 30px auto;
+    width: 92%;
+    max-width: 760px;
+    box-shadow: 0 10px 30px rgba(11,33,53,0.08);
+    border: 1px solid rgba(11,33,53,0.04);
+  }
+
+  #dado {
+    font-size: 6em;
+    margin: 25px;
+    transition: transform 0.6s ease;
+  }
+
+  button {
+    background-color: var(--azul);
+    border: none;
+    color: var(--blanco);
+    padding: 12px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(0,123,255,0.12);
+    transition: background-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+  }
+
+  button:hover {
+    background-color: var(--azul-oscuro);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0,123,255,0.16);
+  }
+
+  /* Boton especifico para regresar */
+  #btnRegresar {
+    background-color: var(--azul-oscuro);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    box-shadow: 0 6px 18px rgba(0,83,179,0.12);
+  }
+
+  #btnRegresar:hover {
+    background-color: #003f8a;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0,63,138,0.16);
+  }
+
+  /* Focus visible para accesibilidad */
+  button:focus, #btnRegresar:focus {
+    outline: 3px solid rgba(0,123,255,0.18);
+    outline-offset: 3px;
+  }
+
+  /* Ajuste de iconos dentro de botones */
+  #btnRegresar svg { width: 20px; height: 20px; }
+
+  /* Boton para abrir la simulacion (indexxx) */
+  #btnIrSimulacion {
+    background-color: var(--azul-oscuro);
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 6px 18px rgba(0,83,179,0.12);
+    margin-left: 8px;
+  }
+  #btnIrSimulacion svg { width: 18px; height: 18px; }
+
+  #resultado {
+    margin-top: 15px;
+    font-size: 1.1em;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 12px;
+    text-align: center;
+  }
+
+  th {
+    background-color: var(--azul);
+    color: var(--blanco);
+  }
+
+  tr:nth-child(even) {
+    background-color: #e8f1ff;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #f5f9ff;
+  }
+
+  canvas {
+    margin-top: 30px;
+  }
+
+  footer {
+    margin: 40px 0 20px 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  footer a {
+    color: var(--blanco);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 1.8rem;
+    }
+  }
+</style>
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<header>
+  <h1>🎲 El Primer Exito - Lanzamiento de 1 Dado</h1>
+  <p>Demostracion interactiva de la <strong>Distribucion Geometrica</strong></p>
+  <p>Simula lanzamientos de un dado hasta obtener un <strong>6</strong>. (p = 1/6)</p>
+</header>
+
+<div class="card">
+  <div id="dado">🎲</div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+    <button id="btnLanzar">Lanzar dado</button>
+  </div>
+
+  <div id="resultado"></div>
+
+  <table>
+    <thead>
+      <tr>
+      <th>Intento</th>
+      <th>Resultado</th>
+      <th>Probabilidad teorica P(X=k)</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-body"></tbody>
+  </table>
+
+  <canvas id="grafico" width="400" height="250"></canvas>
+</div>
+
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:18px;">
+  <div style="display:flex;gap:10px;justify-content:center;">
+    <button id="btnRegresar" title="Regresar" aria-label="Regresar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#fff;">
+        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/>
+      </svg>
+      Regresar
+    </button>
+    <button id="btnIrSimulacion" title="Abrir simulacion" aria-label="Abrir simulacion">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#fff;">
+        <path d="M3 12l18-12v24L3 12z" fill="currentColor"/>
+      </svg>
+      Simulacion
+    </button>
+  </div>
+</div>
+
+<footer>
+  Creado por <a href="https://github.com/CamiloCastro118" target="_blank">Camilo Castro</a> — © 2025
+</footer>
+
+<!-- SCRIPT JS -->
+<script>
+  /*
+    Logica del juego del dado y actualizacion del grafico:
+    - El juego simula lanzamientos de un dado hasta obtener un 6 (exito).
+    - p es la probabilidad de exito por ensayo: p = 1/6.
+    - El contador 'intento' incrementa por cada lanzamiento; cuando sale 6 se marca exito.
+    - Se calcula la probabilidad teorica P(X=k) para cada intento k usando la formula:
+        P(X=k) = (1 - p)^(k - 1) * p
+    - Se registra cada intento en una tabla y se actualiza un grafico de barras con
+      las probabilidades teoricas observadas en la simulacion.
+  */
+
+  // estado y referencias DOM
+  let intento = 0;              // contador de intentos (k)
+  let encontrado = false;       // bandera si se obtuvo exito
+  const p = 1 / 6;              // probabilidad teorica de sacar un 6
+  const dado = document.getElementById("dado");
+  const resultado = document.getElementById("resultado");
+  const tablaBody = document.getElementById("tabla-body");
+  const boton = document.getElementById("btnLanzar");
+  const btnRegresar = document.getElementById("btnRegresar");
+
+  // datos del grafico: etiquetas (ensayos) y probabilidades calculadas
+  const etiquetas = [];
+  const probabilidades = [];
+
+  // inicializar Chart.js para mostrar un histograma de P(X=k)
+  const ctx = document.getElementById("grafico").getContext("2d");
+  const grafico = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: etiquetas,
+      datasets: [{
+        label: "P(X = k)",
+        data: probabilidades,
+        backgroundColor: "#007bff"
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 0.5,
+          title: {
+            display: true,
+            text: "Probabilidad"
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Intentos"
+          }
+        }
+      }
+    }
+  });
+
+  // manejador del boton de lanzar dado
+  boton.addEventListener("click", () => {
+    // si ya hubo exito, reiniciar para nueva corrida
+    if (encontrado) {
+      reiniciarJuego();
+      return;
+    }
+
+    intento++;
+    dado.style.transform = "rotate(360deg)"; // animacion simple
+
+    setTimeout(() => {
+      // generar numero entero entre 1 y 6
+      const numero = Math.floor(Math.random() * 6) + 1;
+      dado.textContent = numero;
+
+      // determinar exito y texto
+      const esExito = numero === 6;
+      const resultadoTexto = esExito ? "🎯 Exito (sacaste 6)" : "❌ Fallo";
+
+      // probabilidad teorica para este intento k
+      const probTeorica = ((1 - p) ** (intento - 1) * p).toFixed(4);
+
+      // agregar fila a la tabla con los datos del intento
+      tablaBody.innerHTML += `
+        <tr>
+          <td>${intento}</td>
+          <td>${resultadoTexto}</td>
+          <td>${probTeorica}</td>
+        </tr>
+      `;
+
+      // actualizar datos del grafico y redibujar
+      etiquetas.push(intento);
+      probabilidades.push(probTeorica);
+      grafico.update();
+
+      // mostrar resultado en la seccion de texto
+      if (esExito) {
+        resultado.innerHTML = `
+          <strong>!Lograste el primer exito!</strong> 🎉<br>
+          Obtuviste un <strong>6</strong> en el intento <strong>${intento}</strong>.<br>
+          P(X=${intento}) = ${probTeorica}
+        `;
+        encontrado = true;
+        boton.textContent = "🔁 Jugar de nuevo";
+      } else {
+        resultado.textContent = `Intento ${intento}: no salio 6...`;
+      }
+    }, 400);
+  });
+
+  // funcion para reiniciar el juego y el grafico
+  function reiniciarJuego() {
+    intento = 0;
+    encontrado = false;
+    tablaBody.innerHTML = "";
+    resultado.textContent = "";
+    boton.textContent = "Lanzar dado";
+    dado.textContent = "🎲";
+    etiquetas.length = 0;
+    probabilidades.length = 0;
+    grafico.update();
+  }
+
+  // manejador del boton regresar: usa history.back si hay historial, sino abre index.html
+  btnRegresar.addEventListener("click", () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = "index.html";
+    }
+  });
+
+  // abrir la ventana de simulacion indexxx.html
+  const btnIrSimulacion = document.getElementById("btnIrSimulacion");
+  if (btnIrSimulacion) {
+    btnIrSimulacion.addEventListener("click", () => {
+      window.location.href = "indexxx.html";
+    });
+  }
+</script>
+</body>
+</html>
