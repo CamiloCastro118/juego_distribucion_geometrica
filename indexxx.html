@@ -78,7 +78,7 @@
     .fail { color: #c62828; }
 
     .prob { margin-top: 10px; font-weight: 700; }
-    /* Icon and focus styles */
+    
     #btnSimular svg { width: 20px; height: 20px; }
     button:focus, #btnSimular:focus { outline: 3px solid rgba(0,123,255,0.18); outline-offset: 3px; }
     /* estilos para botones del footer (consistentes con los otros archivos) */
@@ -137,22 +137,8 @@
 
   <script>
     /*
-      Funcion principal: simularConexion
-      - Lee el valor de probabilidad 'p' desde el input con id "probabilidad".
-      - Valida que p sea un numero valido en (0, 1].
-      - Simula intentos independientes repetidos hasta obtener el primer exito.
-      - En cada intento genera un numero aleatorio entre 0 y 1: si random <= p entonces es exito.
-      - Anota en el log cada intento indicando exito o fallo y el valor aleatorio usado.
-      - Calcula la probabilidad teorica de que el primer exito ocurra justo en el intento k:
-          P(X = k) = (1 - p)^(k - 1) * p
-      - Muestra en pantalla la probabilidad teorica en porcentaje y la formula usada.
-
-      Comentarios de diseno y calculo 
       - El modelo es una variable aleatoria geometrica que cuenta el numero de ensayos
         hasta el primer exito, con ensayos independientes y probabilidad de exito p.
-      - La probabilidad teorica P(X=k) se obtiene multiplicando las (k-1) fallas
-        consecutivas (probabilidad 1-p cada una) por el exito en el k-esimo intento (p).
-      - En la simulacion se repite el proceso hasta que ocurra el exito y se registra k.
     */
     function simularConexion() {
       // obtener p desde el input y referencias a los elementos DOM donde se mostrara info
@@ -194,7 +180,6 @@
       }
 
       // calculo teorico: probabilidad de que el primer exito ocurra exactamente en k = intento
-      // formula: P(X=k) = (1 - p)^(k - 1) * p
       const probTeorica = Math.pow(1 - p, intento - 1) * p;
 
       // mostrar resultado: convertir a porcentaje con dos decimales y mostrar la formula
