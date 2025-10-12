@@ -239,13 +239,6 @@
 <!-- SCRIPT JS  -->
 <script>
   /*
-    Logica del juego de la moneda:
-    - Modelo: variable geometrica que cuenta ensayos hasta el primer exito (cara).
-    - p es la probabilidad de exito por ensayo (cara). En este ejemplo p = 0.5.
-    - Cada vez que el usuario pulsa el boton se genera un valor aleatorio uniformemente en [0,1).
-      Si random < p entonces se considera 'cara' (exito), en otro caso 'sello' (fallo).
-    - Se registra el numero de intento k y se calcula la probabilidad teorica de que
-      el primer exito ocurra justo en k usando: P(X=k) = (1 - p)^(k - 1) * p.
     - El codigo actualiza la interfaz: anima la moneda, agrega una fila en la tabla,
       muestra el resultado y cambia el texto del boton para reiniciar cuando hay exito.
   */
