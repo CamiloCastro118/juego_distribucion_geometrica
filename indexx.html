@@ -6,175 +6,134 @@
 <title>Juego : Dado</title>
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-<!--  CSS -->
+<!-- CSS -->
 <style>
   :root {
-    --azul: #007bff;
-    --azul-oscuro: #004b99;
-    --blanco: #ffffff;
-    --gris: #f8f9fa;
-    --sombra: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --bg: #020204;
+    --panel: #071212;
+    --neon-green: #39ff8b;
+    --neon-green-2: #00ff99;
+    --neon-pink: #ff66cc;
+    --text: #dfeef6;
+    --muted: #9fb7c7;
   }
 
   body {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(180deg, #42abe3 0%, #e8f7ff 45%, #42abe3 100%);
-    font-family: "Inter", "Poppins", sans-serif;
-    color: #0b2135;
-    margin: 0;
-    padding: 0;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Press Start 2P", monospace;
+    background: radial-gradient(circle at 20% 10%, #071014 0%, #000 40%), #000;
+    color: var(--text);
+    padding: 28px 16px;
     text-align: center;
-  }
-
-  header {
-    margin-top: 30px;
   }
 
   h1 {
-    font-size: 2.3rem;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    color: var(--neon-pink);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.1rem;
+    text-shadow: 0 0 10px rgba(255,102,204,0.25);
   }
 
-  p {
-    font-size: 1.1rem;
-    opacity: 0.9;
-  }
+  /* parrafos en verde neon para resaltar texto explicativo */
+  p, header p { color: var(--neon-green); }
 
   .card {
-    background: var(--blanco);
-    color: #222;
-    border-radius: 14px;
-    padding: 28px 30px;
-    margin: 30px auto;
-    width: 92%;
-    max-width: 760px;
-    box-shadow: 0 10px 30px rgba(11,33,53,0.08);
-    border: 1px solid rgba(11,33,53,0.04);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    padding: 18px;
+    border-radius: 12px;
+    width: 94%;
+    max-width: 700px;
+    margin: 0 auto;
+  box-shadow: 0 6px 40px rgba(0,0,0,0.7), 0 0 30px rgba(57,255,139,0.08) inset;
+  border: 2px solid #39ff8b; /* borde neon verde mas visible */
+    color: var(--text);
+    text-align: left;
   }
 
+  /* dado grande y centrado dentro de la tarjeta */
   #dado {
-    font-size: 6em;
-    margin: 25px;
+    font-size: 6.5rem;
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin: 8px 0 6px 0;
     transition: transform 0.6s ease;
   }
 
-  button {
-    background-color: var(--azul);
-    border: none;
-    color: var(--blanco);
-    padding: 12px 22px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 700;
-    box-shadow: 0 6px 18px rgba(0,123,255,0.12);
-    transition: background-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
-  }
-
-  button:hover {
-    background-color: var(--azul-oscuro);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgba(0,123,255,0.16);
-  }
-
-  /* Boton especifico para regresar */
-  #btnRegresar {
-    background-color: var(--azul-oscuro);
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1.05rem;
-    box-shadow: 0 6px 18px rgba(0,83,179,0.12);
-  }
-
-  #btnRegresar:hover {
-    background-color: #003f8a;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgba(0,63,138,0.16);
-  }
-
-  /* Focus visible para accesibilidad */
-  button:focus, #btnRegresar:focus {
-    outline: 3px solid rgba(0,123,255,0.18);
-    outline-offset: 3px;
-  }
-
-  /* Ajuste de iconos dentro de botones */
-  #btnRegresar svg { width: 20px; height: 20px; }
-
-  /* Boton para abrir la simulacion (indexxx) */
-  #btnIrSimulacion {
-    background-color: var(--azul-oscuro);
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    box-shadow: 0 6px 18px rgba(0,83,179,0.12);
-    margin-left: 8px;
-  }
-  #btnIrSimulacion svg { width: 18px; height: 18px; }
-
-  #resultado {
-    margin-top: 15px;
-    font-size: 1.1em;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 25px;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  th, td {
-    padding: 12px;
-    text-align: center;
-  }
-
-  th {
-    background-color: var(--azul);
-    color: var(--blanco);
-  }
-
-  tr:nth-child(even) {
-    background-color: #e8f1ff;
-  }
-
-  tr:nth-child(odd) {
-    background-color: #f5f9ff;
-  }
-
-  canvas {
-    margin-top: 30px;
-  }
-
-  footer {
-    margin: 40px 0 20px 0;
-    font-size: 0.9rem;
-    opacity: 0.8;
-  }
-
-  footer a {
-    color: var(--blanco);
-    text-decoration: none;
-    font-weight: 600;
-  }
-
-  footer a:hover {
-    text-decoration: underline;
-  }
-
   @media (max-width: 600px) {
-    h1 {
-      font-size: 1.8rem;
-    }
+    #dado { font-size: 3.8rem; }
   }
+
+  input[type="number"] {
+    width: 120px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.04);
+    text-align: center;
+    background: rgba(0,0,0,0.6);
+    color: var(--text);
+  }
+
+  button {
+    background: linear-gradient(90deg, rgba(57,255,139,0.12), rgba(0,255,153,0.12));
+    color: var(--neon-green-2);
+    border: 1px solid rgba(57,255,139,0.22);
+    padding: 10px 16px;
+    margin-top: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    box-shadow: 0 8px 24px rgba(57,255,139,0.08), 0 0 18px rgba(57,255,139,0.06) inset;
+    transition: transform 0.12s ease, box-shadow 0.18s ease, background 0.12s ease;
+  }
+
+  button:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(57,255,139,0.14), 0 0 28px rgba(57,255,139,0.08); }
+
+  button:focus { outline: 3px solid rgba(57,255,139,0.28); outline-offset: 4px; box-shadow: 0 0 24px rgba(57,255,139,0.12); }
+
+  .log { text-align: left; background: rgba(11,33,53,0.04); padding: 12px; border-radius: 10px; margin-top: 12px; max-height: 250px; overflow-y: auto; font-size: 0.95rem; color: var(--muted); }
+
+  .success { color: #76c776; }
+  .fail { color: #ff8a8a; }
+
+  .prob { margin-top: 10px; font-weight: 700; color: var(--neon-green-2); }
+
+  /* footer buttons */
+  #btnRegresar, #btnIrSimulacion {
+    background-color: transparent;
+    border: 2px solid #39ff8b;
+    color: #39ff8b;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    margin-left: 8px;
+    box-shadow: 0 6px 18px rgba(57,255,139,0.06), 0 0 18px rgba(57,255,139,0.06) inset;
+    transition: transform 0.12s ease, box-shadow 0.18s ease;
+  }
+
+  #btnRegresar:hover, #btnIrSimulacion:hover { background-color: rgba(57,255,139,0.03); transform: translateY(-3px); box-shadow: 0 10px 26px rgba(57,255,139,0.12), 0 0 26px rgba(57,255,139,0.08); }
+  #btnRegresar:focus, #btnIrSimulacion:focus { outline: 3px solid rgba(57,255,139,0.28); outline-offset: 4px; box-shadow: 0 0 28px rgba(57,255,139,0.12); }
+
+  /* tabla de intentos  neon */
+  .card table { width: 100%; border-collapse: collapse; margin-top: 14px; background: rgba(0,0,0,0.45); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,102,204,0.04); }
+
+  .card th { padding: 10px 12px; text-align: left; background: rgba(255,102,204,0.06); color: var(--neon-pink); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+
+  .card td { padding: 12px; color: var(--muted); font-size: 0.9rem; vertical-align: middle; }
+
+  .card tr:nth-child(even) { background: rgba(57,255,139,0.02); }
+  .card tr:nth-child(odd) { background: rgba(255,255,255,0.01); }
+
+  .card td .fail { color: #ff8a8a; }
+  .card td .success { color: #76c776; }
 </style>
 
-<!-- CHART.JS -->
+<!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -210,13 +169,13 @@
 <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:18px;">
   <div style="display:flex;gap:10px;justify-content:center;">
     <button id="btnRegresar" title="Regresar" aria-label="Regresar">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#fff;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#39ff8b;">
         <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/>
       </svg>
       Regresar
     </button>
     <button id="btnIrSimulacion" title="Abrir simulacion" aria-label="Abrir simulacion">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#fff;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;color:#39ff8b;">
         <path d="M3 12l18-12v24L3 12z" fill="currentColor"/>
       </svg>
       Simulacion
@@ -228,22 +187,15 @@
   Creado por <a href="https://github.com/CamiloCastro118" target="_blank">Camilo Castro</a> — © 2025
 </footer>
 
-<!-- SCRIPT JS -->
+<!-- JS -->
 <script>
   /*
-    Logica del juego del dado y actualizacion del grafico:
-    - El juego simula lanzamientos de un dado hasta obtener un 6 (exito).
-    - p es la probabilidad de exito por ensayo: p = 1/6.
-    - El contador 'intento' incrementa por cada lanzamiento; cuando sale 6 se marca exito.
-    - Se calcula la probabilidad teorica P(X=k) para cada intento k usando la formula:
-        P(X=k) = (1 - p)^(k - 1) * p
-    - Se registra cada intento en una tabla y se actualiza un grafico de barras con
-      las probabilidades teoricas observadas en la simulacion.
+   Se registra cada intento en una tabla y se actualiza un grafico de barras 
   */
 
   // estado y referencias DOM
-  let intento = 0;              // contador de intentos (k)
-  let encontrado = false;       // bandera si se obtuvo exito
+  let intento = 0;              // contador de intentos k
+  let encontrado = false;       // exito
   const p = 1 / 6;              // probabilidad teorica de sacar un 6
   const dado = document.getElementById("dado");
   const resultado = document.getElementById("resultado");
@@ -251,11 +203,11 @@
   const boton = document.getElementById("btnLanzar");
   const btnRegresar = document.getElementById("btnRegresar");
 
-  // datos del grafico: etiquetas (ensayos) y probabilidades calculadas
+  // datos del grafico etiquetas ensayos y probabilidades calculadas
   const etiquetas = [];
   const probabilidades = [];
 
-  // inicializar Chart.js para mostrar un histograma de P(X=k)
+  // inicializar Chart.js para mostrar un histograma d
   const ctx = document.getElementById("grafico").getContext("2d");
   const grafico = new Chart(ctx, {
     type: "bar",
@@ -264,7 +216,7 @@
       datasets: [{
         label: "P(X = k)",
         data: probabilidades,
-        backgroundColor: "#007bff"
+        backgroundColor: "#ff66cc"
       }]
     },
     options: {
@@ -275,29 +227,38 @@
           max: 0.5,
           title: {
             display: true,
-            text: "Probabilidad"
-          }
+            text: "Probabilidad",
+            color: "#ff66cc"
+          },
+          ticks: { color: "#ff66cc" }
         },
         x: {
           title: {
             display: true,
-            text: "Intentos"
-          }
+            text: "Intentos",
+            color: "#ff66cc"
+          },
+          ticks: { color: "#ff66cc" }
         }
+      }
+      ,
+      plugins: {
+        legend: { labels: { color: "#ff66cc" } },
+        tooltip: { titleColor: "#ff66cc", bodyColor: "#ff66cc" }
       }
     }
   });
 
-  // manejador del boton de lanzar dado
+  // boton de lanzar dado
   boton.addEventListener("click", () => {
-    // si ya hubo exito, reiniciar para nueva corrida
+    // si ya hubo exito reiniciar para nuevo juego
     if (encontrado) {
       reiniciarJuego();
       return;
     }
 
     intento++;
-    dado.style.transform = "rotate(360deg)"; // animacion simple
+    dado.style.transform = "rotate(360deg)"; // animacion
 
     setTimeout(() => {
       // generar numero entero entre 1 y 6
@@ -306,9 +267,9 @@
 
       // determinar exito y texto
       const esExito = numero === 6;
-      const resultadoTexto = esExito ? "🎯 Exito (sacaste 6)" : "❌ Fallo";
+      const resultadoTexto = esExito ? "✅  Exito (sacaste 6)" : "❌ Fallo";
 
-      // probabilidad teorica para este intento k
+      // probabilidad teorica para este intento x
       const probTeorica = ((1 - p) ** (intento - 1) * p).toFixed(4);
 
       // agregar fila a la tabla con los datos del intento
@@ -362,7 +323,7 @@
     }
   });
 
-  // abrir la ventana de simulacion indexxx.html
+  // abrir la ventana de simulacion 
   const btnIrSimulacion = document.getElementById("btnIrSimulacion");
   if (btnIrSimulacion) {
     btnIrSimulacion.addEventListener("click", () => {
