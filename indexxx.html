@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simulacion de Conexion</title>
   <style>
-    /* Shared theme variables */
+    /* variables */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
     :root {
       --azul: #007bff;
-      --azul-oscuro: #004b99; /* unificar tono azul oscuro con otros archivos */
+      --azul-oscuro: #004b99; 
       --blanco: #ffffff;
       --gris-claro: #f0f0f0;
     }
@@ -81,7 +81,7 @@
     
     #btnSimular svg { width: 20px; height: 20px; }
     button:focus, #btnSimular:focus { outline: 3px solid rgba(0,123,255,0.18); outline-offset: 3px; }
-    /* estilos para botones del footer (consistentes con los otros archivos) */
+    
     #btnRegresar {
       background-color: var(--azul-oscuro);
       padding: 12px 24px;
@@ -136,10 +136,7 @@
   </div>
 
   <script>
-    /*
-      - El modelo es una variable aleatoria geometrica que cuenta el numero de ensayos
-        hasta el primer exito, con ensayos independientes y probabilidad de exito p.
-    */
+    /*operacion*/
     function simularConexion() {
       // obtener p desde el input y referencias a los elementos DOM donde se mostrara info
       const p = parseFloat(document.getElementById("probabilidad").value);
@@ -150,7 +147,7 @@
       logDiv.innerHTML = "";
       resultadoDiv.innerHTML = "";
 
-      // validar entrada: p debe ser un numero mayor que 0 y menor o igual a 1
+      // validar entrada p debe ser un numero mayor que 0 y menor o igual a 1
       if (isNaN(p) || p <= 0 || p > 1) {
         // mensaje simple al usuario si la entrada no es valida
         alert("⚠️ Ingresa un valor de probabilidad valido (entre 0 y 1).");
@@ -161,28 +158,28 @@
       let intento = 0;
       let exito = false;
 
-      // bucle: repetir hasta encontrar el primer exito
+      // repetir hasta encontrar el primer exito
       while (!exito) {
         intento++; // incrementa el numero de intento (k)
 
-        // generar un valor aleatorio uniforme en [0,1)
-        // si el valor es menor o igual a p, consideramos que hubo exito en ese intento
+        // generar un valor aleatorio uniforme en 0.1
+        // si el valor es menor o igual a p consideramos que hubo exito en ese intento
         const random = Math.random();
 
         if (random <= p) {
-          // exito: marcar bandera y anadir linea de exito al log con el valor aleatorio
+          // exito marcar bandera y anadir linea de exito al log con el valor aleatorio
           exito = true;
           logDiv.innerHTML += `<p class="success">✅ Exito en el intento ${intento} (valor aleatorio: ${random.toFixed(3)})</p>`;
         } else {
-          // fallo: anadir linea de fallo al log
+          // fallo anadir linea de fallo al log
           logDiv.innerHTML += `<p class="fail">❌ Fallo en el intento ${intento} (valor aleatorio: ${random.toFixed(3)})</p>`;
         }
       }
 
-      // calculo teorico: probabilidad de que el primer exito ocurra exactamente en k = intento
+      // calculo teorico probabilidad de que el primer exito ocurra exactamente en k = intento
       const probTeorica = Math.pow(1 - p, intento - 1) * p;
 
-      // mostrar resultado: convertir a porcentaje con dos decimales y mostrar la formula
+      // mostrar resultado convertir a porcentaje con dos decimales y mostrar la formula
       resultadoDiv.innerHTML = `
         📊 <strong>Probabilidad teorica</strong> de lograrlo justo en el intento ${intento}: 
         ${(probTeorica * 100).toFixed(2)}%<br>
@@ -214,9 +211,9 @@
     </div>
   </footer>
 
-  <!-- SCRIPT para los botones del footer -->
+
   <script>
-    // boton regresar: usa history.back si hay historial, sino abre index.html
+    //  abre index.html
     const btnRegresar = document.getElementById('btnRegresar');
     if (btnRegresar) {
       btnRegresar.addEventListener('click', () => {
@@ -228,7 +225,7 @@
       });
     }
 
-    // boton para ir al juego del dado (indexx.html)
+    // boton para ir al juego del dado indexx.html
     const btnIrDado = document.getElementById('btnIrDado');
     if (btnIrDado) {
       btnIrDado.addEventListener('click', () => {
