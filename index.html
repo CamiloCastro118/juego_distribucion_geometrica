@@ -84,7 +84,7 @@
     box-shadow: 0 10px 22px rgba(0,123,255,0.18);
   }
 
-  /* Boton especifico para ir al juego del dado */
+  /* boton  ir al juego del dado */
   #btnIrDado {
     background-color: var(--azul-oscuro);
     padding: 12px 24px;
@@ -95,7 +95,7 @@
   }
 
   #btnIrDado:hover {
-    background-color: #003f8a; /* un tono mas oscuro para hover */
+    background-color: #003f8a; 
     transform: translateY(-2px);
     box-shadow: 0 10px 22px rgba(0,63,138,0.16);
   }
@@ -155,7 +155,7 @@
     text-decoration: underline;
   }
 
-  /* Focus visible para accesibilidad */
+  /* focus visible para accesibilidad */
   button:focus, #btnIrDado:focus {
     outline: 3px solid rgba(0,123,255,0.18);
     outline-offset: 3px;
@@ -163,7 +163,7 @@
 
   /* Ajuste de iconos dentro de botones */
   #btnIrDado svg { width: 20px; height: 20px; }
-  /* Boton para abrir la simulacion (indexxx) */
+  /* boton  abrir la simulacion indexxx */
   #btnIrSimulacion {
     background-color: var(--azul-oscuro);
     padding: 12px 24px;
@@ -236,12 +236,8 @@
   </div>
 </footer>
 
-<!-- SCRIPT JS  -->
+<!-- JS  -->
 <script>
-  /*
-    - El codigo actualiza la interfaz: anima la moneda, agrega una fila en la tabla,
-      muestra el resultado y cambia el texto del boton para reiniciar cuando hay exito.
-  */
 
   // variables de estado
   let intento = 0;            // contador de intentos (k)
